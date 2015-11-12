@@ -1,7 +1,7 @@
 var path = require('path')
 
 module.exports = {
-    entry: './index.js',
+    entry: './js/index',
     output: {
         path: path.join(__dirname, 'dist'),
         filename: "bundle.js"
@@ -11,10 +11,15 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 exclude: /(node_modules|bower_components)/,
-                loader: 'babel', // 'babel-loader' is also a legal name to reference
+                loader: 'babel',
                 query: {
                     presets: ['es2015', 'react']
                 }
+            },
+            {
+                test: /\.scss$/,
+                include: path.join(__dirname, 'css'),
+                loaders: ["style", "css", "sass"]
             }
         ]
     }
