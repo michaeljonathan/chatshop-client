@@ -5,6 +5,7 @@ module.exports = {
     devtool: 'eval',
     entry: [
         'webpack-hot-middleware/client',
+        'webpack/hot/only-dev-server',
         './js/index'
     ],
     output: {
@@ -21,10 +22,7 @@ module.exports = {
             {
                 test: /\.jsx?$/,
                 include: path.join(__dirname, 'js'),
-                loader: 'babel',
-                query: {
-                    presets: ['es2015', 'react']
-                }
+                loaders: ['react-hot', 'babel?presets[]=es2015&presets[]=react']
             },
             {
                 test: /\.scss$/,
