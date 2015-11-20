@@ -4,7 +4,7 @@ var webpack = require('webpack')
 module.exports = {
     devtool: 'eval',
     entry: [
-        'webpack-hot-middleware/client',
+        'webpack-hot-middleware/client?reload=true',
         'webpack/hot/only-dev-server',
         './js/index'
     ],
