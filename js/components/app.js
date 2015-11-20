@@ -1,9 +1,25 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-export default class App extends Component {
+import { incrementCounter } from '../logic/actions'
+
+class App extends Component {
 	render() {
+		const { dispatch, counter } = this.props;
 		return (
-			<h1>Hi! This is App. :)</h1>
+			<div>
+				<h1>Hi! This is App. :)</h1>
+			</div>
 		)
 	}
 }
+
+function mapStateToInjectedProps(state) {
+	return {
+		counter: state.counter
+	}
+}
+
+let InjectedAppComponent = connect(mapStateToInjectedProps)(App)
+
+export default InjectedAppComponent;
