@@ -8,6 +8,7 @@ import { render } from 'react-dom'
 import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
+import socketIoClient from 'socket.io-client'
 
 // Logic
 import reducer from './logic/reducers'
@@ -30,6 +31,16 @@ const createStoreWithMiddleware = applyMiddleware(
 )(createStore)
 
 let store = createStoreWithMiddleware(reducer)
+
+// Socket
+var webSocket = socketIoClient('http://localhost:3005')
+webSocket.emit('CLIENT_ARRIVED', {
+	name: 'User 1'
+})
+webSocket.on('NOTIFICATION', function(data) {
+	console.log('Notification received:');
+	console.log(data);
+})
 
 // Components
 let rootElement = document.querySelector('.content')
