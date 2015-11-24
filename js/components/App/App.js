@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { incrementCounter } from '../../logic/actions'
-
 class App extends Component {
 	render() {
-		const { dispatch, counter } = this.props;
+		const { dispatch } = this.props;
 		return (
 			<div>
 				<h1>Hi! This is App. :)</h1>
@@ -16,7 +14,6 @@ class App extends Component {
 
 function mapStateToInjectedProps(state) {
 	return {
-		counter: state.counter
 	}
 }
 
