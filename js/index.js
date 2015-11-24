@@ -18,6 +18,7 @@ import appReducers from './logic/reducers'
 
 // Components
 import App from './components/App'
+import AboutPage from './components/AboutPage'
 
 // Style
 import '../css/app.scss'
@@ -60,6 +61,7 @@ render(
 	<Provider store={store}>
 		<Router history={browserHistory}>
 			<Route path="/" component={App} />
+			<Route path="/about" component={AboutPage} />
 		</Router>
 	</Provider>,
 	rootElement

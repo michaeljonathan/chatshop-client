@@ -3,3 +3,14 @@ h1 {
 	text-align: center;
 	margin-top: 30%;
 }
+
+footer {
+	text-align: center;
+	a {
+		color: #aaa;
+		text-decoration: none;
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

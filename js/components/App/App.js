@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 
 class App extends Component {
 	render() {
@@ -7,6 +8,9 @@ class App extends Component {
 		return (
 			<div>
 				<h1>Hi! This is App. :)</h1>
+				<footer>
+					<Link to={`/about`}>About ChatShop</Link>
+				</footer>
 			</div>
 		)
 	}
