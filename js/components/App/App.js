@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { incrementCounter } from '../logic/actions'
+import { incrementCounter } from '../../logic/actions'
 
 class App extends Component {
 	render() {

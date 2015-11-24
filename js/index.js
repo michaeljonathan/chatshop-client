@@ -14,10 +14,10 @@ import socketIoClient from 'socket.io-client'
 import reducer from './logic/reducers'
 
 // Components
-import App from './components/app'
+import App from './components/App'
 
 // Style
-require('../css/app.scss')
+import '../css/app.scss'
 
 
 
