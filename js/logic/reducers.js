@@ -143,10 +143,10 @@ function currentThread(currentThread = false, action) {
 	}
 }
 
-export default combineReducers({
+export default {
 	threadList,
 	threads,
 	users,
 	currentUser,
 	currentThread
-})
+}

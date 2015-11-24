@@ -5,13 +5,16 @@
 // Libraries
 import React from 'react'
 import { render } from 'react-dom'
-import { applyMiddleware, createStore } from 'redux'
+import { Router, Route } from 'react-router'
+import { applyMiddleware, combineReducers, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
+import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
 import socketIoClient from 'socket.io-client'
+import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 // Logic
-import reducer from './logic/reducers'
+import appReducers from './logic/reducers'
 
 // Components
 import App from './components/App'
@@ -26,11 +29,19 @@ import '../css/app.scss'
  */
 
 // Logic
-const createStoreWithMiddleware = applyMiddleware(
+let createStoreWithMiddleware = applyMiddleware(
 	thunk
 )(createStore)
 
-let store = createStoreWithMiddleware(reducer)
+let combinedReducer = combineReducers(Object.assign({}, appReducers, {
+	routing: routeReducer
+}))
+
+let browserHistory = createBrowserHistory()
+
+let store = createStoreWithMiddleware(combinedReducer)
+
+syncReduxAndRouter(browserHistory, store) 
 
 // Socket
 var webSocket = socketIoClient('http://localhost:3005')
@@ -47,7 +58,9 @@ let rootElement = document.querySelector('.content')
 
 render(
 	<Provider store={store}>
-		<App />
+		<Router history={browserHistory}>
+			<Route path="/" component={App} />
+		</Router>
 	</Provider>,
 	rootElement
 )
