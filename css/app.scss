@@ -1,10 +1,37 @@
-h1 {
-	color: #00AAFF;
-	text-align: center;
-	margin-top: 30%;
+@import 'reset';
+
+$color-bg: #fff;
+$color-bg-lightgrey: #f4f4f4;
+$color-grey: #494949;
+$color-accent: #a66f3f;
+
+$font-heading: 'Consolas', monospace, sans-serif;
+$font-general: 'Georgia', serif;
+
+* {
+	box-sizing: border-box;
 }
 
-footer {
+/*
+ * App
+ */
+
+.App {
+	height: 100%;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	color: #color-grey;
+}
+
+.App__mainContainer {
+	flex: 1;
+	display: flex;
+	flex-direction: horizontal;
+}
+
+.App_bar {
+	padding-top: 10px;
 	text-align: center;
 	a {
 		color: #aaa;
@@ -14,3 +41,120 @@ footer {
 		}
 	}
 }
+
+/*
+ * ThreadList
+ */
+
+.ThreadList {
+	border: 2px solid $color-grey;
+	margin-right: 10px;
+	width: 30%;
+	min-width: 240px;
+	max-width: 360px;
+}
+
+.ThreadList__header {
+	position: relative;
+	height: 75px;
+	font-family: $font-heading;
+	cursor: default;
+	.ThreadList__header__center {
+		position: absolute;
+		top: 20px;
+		left: 23%;
+		right: 23%;
+		padding: 7px 0 5px;
+		border: 1px solid $color-bg;
+		background-color: $color-grey;
+		color: #fff;
+		text-transform: uppercase;
+		text-align: center;
+		letter-spacing: 4;
+	}
+	.ThreadList__header__left,
+	.ThreadList__header__right {
+		position: absolute;
+		top: 30px;
+		width: 40px;
+		border-style: solid;
+		border-color: $color-grey;
+		border-width: 13px 15px;
+	}
+	.ThreadList__header__left {
+		border-left-color: transparent;
+		left: 15%;
+	}
+	.ThreadList__header__right {
+		border-right-color: transparent;
+		right: 15%;
+	}
+}
+
+.ThreadList__search {
+	padding: 0 15px;
+	input {
+		border: none;
+		background-color: $color-bg-lightgrey;
+		width: 100%;
+		padding: 8px 12px;
+		margin-bottom: 10px;
+		outline: none;
+		font-family: $font-general;
+		font-style: italic;
+		font-size: 14px;
+		&:focus {
+			font-style: normal;
+			&::-webkit-input-placeholder {
+				color: transparent;
+			}
+		}
+	}
+}
+
+.ThreadListItem {
+	padding: 12px 15px;
+	&:hover {
+		background-color: $color-bg-lightgrey;
+	}
+	.ThreadListItem__secondRow {
+		margin-top: 5px;
+	}
+	.ThreadListItem__currentIndicator,
+	.ThreadListItem__unreadCount {
+		float: right;
+	}
+	.ThreadListItem__currentIndicator {
+		font-family: Wingdings;
+		color: $color-accent;
+		font-weight: bold;
+	}
+	.ThreadListItem__unreadCount {
+		font-family: $font-heading;
+		font-weight: bold;
+	}
+	.ThreadListItem__name {
+		font-family: $font-heading;
+		text-transform: uppercase;
+		font-weight: bold;
+		overflow: hidden;
+	}
+	.ThreadListItem__snippet {
+		font-family: $font-general;
+		font-size: 13px;
+		font-style: italic;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+}
+
+/*
+ * Conversation
+ */
+
+.Conversation {
+	flex: 1;
+	background: #eee;
+}
+

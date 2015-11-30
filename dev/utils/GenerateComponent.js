@@ -11,7 +11,7 @@ class ${componentName} extends Component {
 	render() {
 		const { dispatch } = this.props;
 		return (
-			<div>
+			<div className="${componentName}">
 			</div>
 		)
 	}
@@ -20,6 +20,10 @@ class ${componentName} extends Component {
 function mapStateToInjectedProps(state) {
 	return {
 	}
+}
+
+${componentName}.propTypes = {
+	
 }
 
 let Injected${componentName}Component = connect(mapStateToInjectedProps)(${componentName})

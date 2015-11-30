@@ -2,13 +2,19 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 
+import Conversation from '../Conversation'
+import ThreadList from '../ThreadList'
+
 class App extends Component {
 	render() {
 		const { dispatch } = this.props;
 		return (
-			<div>
-				<h1>Hi! This is App. :)</h1>
-				<footer>
+			<div className="App">
+				<div className="App__mainContainer">
+					<ThreadList threadList={this.props.threadList}></ThreadList>
+					<Conversation></Conversation>
+				</div>
+				<div className="App_bar">
 					{function() {
 						return this.props.currentUser ?
 							<p>Logged in as {this.props.currentUser}</p>
@@ -18,7 +24,7 @@ class App extends Component {
 					<p>
 						<Link to={`/about`}>About ChatShop</Link>
 					</p>
-				</footer>
+				</div>
 			</div>
 		)
 	}
@@ -26,7 +32,10 @@ class App extends Component {
 
 function mapStateToInjectedProps(state) {
 	return {
-		currentUser: state.currentUser
+		currentUser: state.currentUser,
+		threadList: state.threadList.map(function(threadID) {
+			return state.threads[threadID]
+		})
 	}
 }
 
