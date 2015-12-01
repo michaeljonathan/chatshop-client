@@ -11,7 +11,9 @@ export default class ThreadListItem extends Component {
 					<div className="ThreadListItem__name">{thread.title}</div>
 				</div>
 				<div className="ThreadListItem__secondRow">
-					<div className="ThreadListItem__snippet">{thread.description}</div>
+					{(() => {if (thread.latestMessage) {
+						return <div className="ThreadListItem__snippet">{thread.latestMessage.author.name}: {thread.latestMessage.message}</div>
+					}})()}
 				</div>
 			</div>
 		)

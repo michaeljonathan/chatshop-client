@@ -91,6 +91,10 @@ store.dispatch(actions.receiveUser({
 	id: 'u1',
 	name: 'MJ'
 }));
+store.dispatch(actions.receiveUser({
+	id: 'u2',
+	name: 'Florence Brown'
+}));
 store.dispatch(actions.receiveThread({
 	id: 't1',
 	type: 'group',
@@ -103,13 +107,13 @@ store.dispatch(actions.receiveThread({
 store.dispatch(actions.receiveMessage({
 	id: 'm1',
 	threadID: 't1',
-	author: 'u1',
+	authorID: 'u1',
 	message: 'Hi what\'s up everybody.'
 }));
 store.dispatch(actions.receiveMessage({
 	id: 'm2',
 	threadID: 't1',
-	author: 'u2',
+	authorID: 'u2',
 	message: 'Eating donuts!'
 }));
 store.dispatch(actions.sendMessage({}));

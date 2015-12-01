@@ -17,25 +17,25 @@ let exampleAppState = {
 					m1: {
 						id: 'm1',
 						threadID: 't1',
-						author: 'u1',
+						authorID: 'u1',
 						message: 'Hi what\'s up everybody.'
 					},
 					m2: {
 						id: 'm2',
 						threadID: 't1',
-						author: 'u2',
+						authorID: 'u2',
 						message: 'Eating donuts!'
 					},
 					m3: {
 						id: 'm3',
 						threadID: 't1',
-						author: 'u4',
+						authorID: 'u4',
 						message: 'Emily Heat'
 					},
 					m4: {
 						id: 'm4',
 						threadID: 't1',
-						author: 'u4',
+						authorID: 'u4',
 						message: 'Ben\'s on heat'
 					}
 				}
@@ -50,7 +50,7 @@ let exampleAppState = {
 					m5: {
 						id: 'm5',
 						threadID: 't2',
-						author: 'u1',
+						authorID: 'u1',
 						message: 'G\'day ipsum dolor sit amet!'
 					}
 				}

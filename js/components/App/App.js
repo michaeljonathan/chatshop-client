@@ -5,6 +5,10 @@ import { Link } from 'react-router'
 import Conversation from '../Conversation'
 import ThreadList from '../ThreadList'
 
+import { AppSelector } from '../../logic/selectors'
+
+// window.AppSel = AppSelector;
+
 class App extends Component {
 	render() {
 		const { dispatch } = this.props;
@@ -30,15 +34,6 @@ class App extends Component {
 	}
 }
 
-function mapStateToInjectedProps(state) {
-	return {
-		currentUser: state.currentUser,
-		threadList: state.threadList.map(function(threadID) {
-			return state.threads[threadID]
-		})
-	}
-}
-
-let InjectedAppComponent = connect(mapStateToInjectedProps)(App)
+let InjectedAppComponent = connect(AppSelector)(App)
 
 export default InjectedAppComponent;
