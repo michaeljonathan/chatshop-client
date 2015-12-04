@@ -111,6 +111,7 @@ $font-general: 'Georgia', serif;
 		padding: 8px 12px;
 		margin-bottom: 10px;
 		outline: none;
+		font-family: $font-general;
 		font-style: italic;
 		font-size: 14px;
 		&:focus {
@@ -248,6 +249,7 @@ $font-general: 'Georgia', serif;
 			width: 100%;
 			padding: 8px 12px;
 			outline: none;
+			font-family: $font-general;
 			font-style: italic;
 			font-size: 14px;
 			&:focus {
@@ -259,7 +261,7 @@ $font-general: 'Georgia', serif;
 		}
 	}
 	.Conversation__composerControls {
-		padding-left: 10px;
+
 	}
 	.Conversation__buttonSend {
 		font-size: 12px;
@@ -267,7 +269,7 @@ $font-general: 'Georgia', serif;
 		text-transform: uppercase;
 		background-color: $color-grey;
 		color: #fff;
-		padding: 11px 14px 7px;
+		padding: 12px 14px 9px;
 	}
 }
 

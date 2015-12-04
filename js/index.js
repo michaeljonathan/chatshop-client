@@ -73,6 +73,7 @@ render(
  */
 
 window.store = store;
+window.actions = actions;
 
 function printState() {
 	console.log(store.getState());
