@@ -5,27 +5,25 @@ import { Link } from 'react-router'
 import Conversation from '../Conversation'
 import ThreadList from '../ThreadList'
 
-import { AppSelector } from '../../logic/selectors'
-
-// window.AppSel = AppSelector;
+import { appSelector } from '../../logic/selectors'
 
 class App extends Component {
 	render() {
-		const { dispatch } = this.props;
+		const { dispatch, currentUser } = this.props
 		return (
 			<div className="App">
 				<div className="App__mainContainer">
-					<ThreadList threadList={this.props.threadList}></ThreadList>
+					<ThreadList></ThreadList>
 					<Conversation></Conversation>
 				</div>
-				<div className="App_bar">
+				<div className="App__bar">
 					{function() {
-						return this.props.currentUser ?
-							<p>Logged in as {this.props.currentUser}</p>
+						return currentUser ?
+							<p className="App__bar__identity">Logged in as {currentUser.name}</p>
 						:
-							<p>Logged out</p>
+							<p className="App__bar__identity">Logged out</p>
 					}.call(this)}
-					<p>
+					<p className="App__bar__nav">
 						<Link to={`/about`}>About ChatShop</Link>
 					</p>
 				</div>
@@ -34,6 +32,6 @@ class App extends Component {
 	}
 }
 
-let InjectedAppComponent = connect(AppSelector)(App)
+let InjectedAppComponent = connect(appSelector)(App)
 
 export default InjectedAppComponent;

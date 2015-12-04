@@ -1,152 +1,81 @@
-import { combineReducers } from 'redux'
-
 import * as actions from './actions'
 
-let exampleAppState = {
-	threadList: ['t3', 't5', 't1', 't2', 't4'],
-	threads: {
-		t1:
-			{
-				id: 't1',
-				type: 'group',
-				title: 'Team Updates',
-				description: 'Late? Sick? Leaving early? Post in here to let the team know.',
-				participants: ['u1', 'u2', 'u3', 'u4'],
-				messageList: ['m1', 'm2', 'm3', 'm4'],
-				messages: {
-					m1: {
-						id: 'm1',
-						threadID: 't1',
-						authorID: 'u1',
-						message: 'Hi what\'s up everybody.'
-					},
-					m2: {
-						id: 'm2',
-						threadID: 't1',
-						authorID: 'u2',
-						message: 'Eating donuts!'
-					},
-					m3: {
-						id: 'm3',
-						threadID: 't1',
-						authorID: 'u4',
-						message: 'Emily Heat'
-					},
-					m4: {
-						id: 'm4',
-						threadID: 't1',
-						authorID: 'u4',
-						message: 'Ben\'s on heat'
-					}
-				}
-			},
-		t2:
-			{
-				id: 't2',
-				type: 'personal',
-				otherUser: 'u2',
-				messageList: ['m5'],
-				messages: {
-					m5: {
-						id: 'm5',
-						threadID: 't2',
-						authorID: 'u1',
-						message: 'G\'day ipsum dolor sit amet!'
-					}
-				}
-			}
-	},
-	users: {
-		u1:
-			{
-				id: 'u1',
-				name: 'MJ'
-			},
-		u2:
-			{
-				id: 'u2',
-				name: 'Florence Brown'
-			},
-		u3:
-			{
-				id: 'u3',
-				name: 'Ben Crowe'
-			},
-		u4:
-			{
-				id: 'u4',
-				name: 'Sophie Hargrave'
-			}
-	},
-	currentUser: 'u1',
-	currentThread: 't1'
-}
-
-function threadList(threadList = [], action) {
+function threadIDs(threadIDs = [], action) {
 	switch (action.type) {
 		case actions.RECEIVE_THREAD:
-			return [action.threadData.id, ...threadList]
+			return [action.threadData.id, ...threadIDs]
 		default: 
-			return threadList
+			return threadIDs
 	}
 }
 
-function threads(threads = {}, action) {
+function threadsMap(threadsMap = {}, action) {
 	switch (action.type) {
 		case actions.RECEIVE_THREAD:
-			return Object.assign({}, threads, {
+			return Object.assign({}, threadsMap, {
 				[action.threadData.id]: action.threadData
 			})
 		case actions.RECEIVE_MESSAGE:
 			var messageData = action.messageData;
 			var threadID = messageData.threadID;
-			var thread = threads[threadID];
-			return Object.assign({}, threads, {
+			var thread = threadsMap[threadID];
+			return Object.assign({}, threadsMap, {
 				[threadID]: Object.assign({}, thread, {
-					messageList: [...(thread.messageList), messageData.id],
-					messages: Object.assign({}, thread.messages, {
-						[messageData.id]: messageData
-					})
-				}) 
+					messageIDs: [...(thread.messageIDs), messageData.id],
+					unreadSince: thread.unreadSince || messageData.id
+				})
 			})
 		default: 
-			return threads
+			return threadsMap
 	}
 }
 
-function users(users = {}, action) {
+function messagesMap(messagesMap = {}, action) {
+	switch (action.type) {
+		case actions.RECEIVE_MESSAGE:
+			var messageData = action.messageData;
+			return Object.assign({}, messagesMap, {
+				[messageData.id]: messageData
+			})
+		default:
+			return messagesMap;
+	}
+}
+
+function usersMap(usersMap = {}, action) {
 	switch (action.type) {
 		case actions.RECEIVE_USER:
-			return Object.assign({}, users, {
+			return Object.assign({}, usersMap, {
 				[action.userData.id]: action.userData
 			})
 		default: 
-			return users
+			return usersMap
 	}
 }
 
-function currentUser(currentUser = false, action) {
+function currentUserID(currentUserID = false, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_USER:
 			return action.userID
 		default: 
-			return currentUser
+			return currentUserID
 	}
 }
 
-function currentThread(currentThread = false, action) {
+function currentThreadID(currentThreadID = false, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_THREAD:
 			return action.threadID
 		default: 
-			return currentThread
+			return currentThreadID
 	}
 }
 
 export default {
-	threadList,
-	threads,
-	users,
-	currentUser,
-	currentThread
+	threadIDs,
+	threadsMap,
+	messagesMap,
+	usersMap,
+	currentUserID,
+	currentThreadID
 }

@@ -85,8 +85,6 @@ store.subscribe(function() {
 
 import * as actions from './logic/actions'
 
-store.dispatch(actions.setCurrentUser('u1'));
-store.dispatch(actions.setCurrentThread('t1'));
 store.dispatch(actions.receiveUser({
 	id: 'u1',
 	name: 'MJ'
@@ -100,21 +98,25 @@ store.dispatch(actions.receiveThread({
 	type: 'group',
 	title: 'Team Updates',
 	description: 'Late? Sick? Leaving early? Post in here to let the team know.',
-	participants: ['u1', 'u2', 'u3', 'u4'],
-	messageList: [],
-	messages: {}
+	participantIDs: ['u1'],
+	messageIDs: [],
+	unreadSince: false
 }));
 store.dispatch(actions.receiveMessage({
 	id: 'm1',
 	threadID: 't1',
 	authorID: 'u1',
+	date: 'Thu Dec 03 2015 12:00:00 GMT+1100 (AEDT)',
 	message: 'Hi what\'s up everybody.'
 }));
 store.dispatch(actions.receiveMessage({
 	id: 'm2',
 	threadID: 't1',
 	authorID: 'u2',
-	message: 'Eating donuts!'
+	date: 'Thu Dec 03 2015 12:01:00 GMT+1100 (AEDT)',
+	message: 'Hey!!'
 }));
+store.dispatch(actions.setCurrentUser('u1'));
+store.dispatch(actions.setCurrentThread('t1'));
 store.dispatch(actions.sendMessage({}));
 

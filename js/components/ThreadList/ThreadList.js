@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+
+import { threadListSelector } from '../../logic/selectors'
 
 import ThreadListItem from '../ThreadListItem'
 
-export default class ThreadList extends Component {
+class ThreadList extends Component {
 	render() {
+		const { dispatch, threadList } = this.props
 		return (
 			<div className="ThreadList">
 				<div className="ThreadList__header">
@@ -15,11 +19,15 @@ export default class ThreadList extends Component {
 					<input type="text" placeholder="Search..."/>
 				</div>
 				<div className="ThreadList__list">
-					{this.props.threadList.map(function(thread, index) {
-						return <ThreadListItem thread={thread} key={index} />
-					})}
+					{threadList.map((thread, index) => 
+						<ThreadListItem thread={thread} key={index} />
+					)}
 				</div>
 			</div>
 		)
 	}
 }
+
+let InjectedThreadListComponent = connect(threadListSelector)(ThreadList)
+
+export default InjectedThreadListComponent
