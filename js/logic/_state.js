@@ -67,9 +67,20 @@ let threadListDerivedState = {
 			description: 'Late? Sick? Leaving early? Post in here to let the team know.',
 
 			latestMessage: {
-				* messages.m1(selected) *
+				* messages.m1(derived) *
 			},
 			isCurrent: true,
+			unreadCount: 20
+		},
+		{
+			id: 't2',
+			type: 'personal',
+
+			other: -> usersMap.u2
+			latestMessage: {
+				* messages.m2(derived) *
+			},
+			isCurrent: false,
 			unreadCount: 20
 		}
 	]
@@ -88,7 +99,7 @@ let conversationDerivedState = {
 		unreadSince: 'm1',
 		messages: [
 			{
-				* messages.m1(selected) *
+				* messages.m1(derived) *
 			}
 		]
 	}
@@ -98,7 +109,7 @@ let conversationDerivedState = {
  * (Example) Derived message object
  */
 
-let messageSelected = {
+let messageDerived = {
 	id: 'm1',
 	date: 'Thu Dec 03 2015 12:00:00 GMT+1100 (AEDT)',
 	message: 'Hi what\'s up everybody.',

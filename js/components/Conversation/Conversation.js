@@ -6,11 +6,24 @@ import { conversationSelector } from '../../logic/selectors'
 class Conversation extends Component {
 	render() {
 		const { thread } = this.props
+
+		var threadTitle;
+		switch (thread.type) {
+			case 'group':
+				threadTitle = thread.title
+				break
+			case 'personal':
+				threadTitle = thread.other.name
+				break
+			default:
+				break
+		}
+
 		return (
 			<div className="Conversation">
 				<div className="Conversation__header">
 					<div className="Conversation__header__top">
-						<span className="Conversation__threadTitle">{thread.title}</span>
+						<span className="Conversation__threadTitle">{threadTitle}</span>
 						<span className="Conversation__options">&gt;</span>
 					</div>
 					<div className="Conversation__header__bottom">

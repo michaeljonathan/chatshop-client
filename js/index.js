@@ -94,12 +94,23 @@ store.dispatch(actions.receiveUser({
 	id: 'u2',
 	name: 'Florence Brown'
 }));
+store.dispatch(actions.receiveUser({
+	id: 'u3',
+	name: 'Allan Ngo'
+}));
 store.dispatch(actions.receiveThread({
 	id: 't1',
 	type: 'group',
 	title: 'Team Updates',
 	description: 'Late? Sick? Leaving early? Post in here to let the team know.',
 	participantIDs: ['u1'],
+	messageIDs: [],
+	unreadSince: false
+}));
+store.dispatch(actions.receiveThread({
+	id: 't2',
+	type: 'personal',
+	other: 'u3',
 	messageIDs: [],
 	unreadSince: false
 }));
@@ -117,7 +128,21 @@ store.dispatch(actions.receiveMessage({
 	date: 'Thu Dec 03 2015 12:01:00 GMT+1100 (AEDT)',
 	message: 'Hey!!'
 }));
+store.dispatch(actions.receiveMessage({
+	id: 'm3',
+	threadID: 't2',
+	authorID: 'u3',
+	date: 'Thu Dec 03 2015 12:01:00 GMT+1100 (AEDT)',
+	message: 'Good morning'
+}));
+store.dispatch(actions.receiveMessage({
+	id: 'm4',
+	threadID: 't2',
+	authorID: 'u1',
+	date: 'Thu Dec 03 2015 12:02:00 GMT+1100 (AEDT)',
+	message: 'How are you going'
+}));
 store.dispatch(actions.setCurrentUser('u1'));
-store.dispatch(actions.setCurrentThread('t1'));
+store.dispatch(actions.setCurrentThread('t2'));
 store.dispatch(actions.sendMessage({}));
 

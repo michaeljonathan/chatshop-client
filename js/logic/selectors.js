@@ -64,15 +64,30 @@ export const threadListSelector = createSelector(
 				}
 
 				/* ThreadList->Thread Prop */
-				return {
-					id: thread.id,
-					type: thread.type,
-					title: thread.title,
-					description: thread.description,
+				switch (thread.type) {
+					case 'group':
+						return {
+							id: thread.id,
+							type: thread.type,
+							title: thread.title,
+							description: thread.description,
 
-					latestMessage: latestMessage,
-					isCurrent: thread.id == currentThreadID,
-					unreadCount: unreadCount
+							latestMessage: latestMessage,
+							isCurrent: thread.id == currentThreadID,
+							unreadCount: unreadCount
+						}
+					case 'personal':
+						return {
+							id: thread.id,
+							type: thread.type,
+
+							other: usersMap[thread.other],
+							latestMessage: latestMessage,
+							isCurrent: thread.id == currentThreadID,
+							unreadCount: unreadCount
+						}
+					default:
+						break;
 				}
 			})
 		}
@@ -97,18 +112,36 @@ export const conversationSelector = createSelector(
 		}
 
 		let thread = threadsMap[currentThreadID];
-		return {
-			thread: {
-				id: thread.id,
-				type: thread.type,
-				title: thread.title,
-				description: thread.description,
-				unreadSince: thread.unreadSince,
+		switch (thread.type) {
+			case 'group':
+				return {
+					thread: {
+						id: thread.id,
+						type: thread.type,
+						title: thread.title,
+						description: thread.description,
+						unreadSince: thread.unreadSince,
 
-				messages: thread.messageIDs.map((messageID) => {
-					return messageContextDeriver(messagesMap[messageID], threadsMap, usersMap)
-				})
-			}
+						messages: thread.messageIDs.map((messageID) => {
+							return messageContextDeriver(messagesMap[messageID], threadsMap, usersMap)
+						})
+					}
+				}
+			case 'personal':
+				return {
+					thread: {
+						id: thread.id,
+						type: thread.type,
+						unreadSince: thread.unreadSince,
+
+						other: usersMap[thread.other],
+						messages: thread.messageIDs.map((messageID) => {
+							return messageContextDeriver(messagesMap[messageID], threadsMap, usersMap)
+						})
+					}
+				}
+			default:
+				break;
 		}
 	}
 )
