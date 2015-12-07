@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { setCurrentThread } from '../../logic/actions'
 import { threadListSelector } from '../../logic/selectors'
 
 import ThreadListItem from '../ThreadListItem'
@@ -20,7 +21,8 @@ class ThreadList extends Component {
 				</div>
 				<div className="ThreadList__list">
 					{threadList.map((thread, index) => 
-						<ThreadListItem thread={thread} key={index} />
+						<ThreadListItem thread={thread} key={index}
+						onClick={()=>{dispatch(setCurrentThread(thread.id))}} />
 					)}
 				</div>
 			</div>

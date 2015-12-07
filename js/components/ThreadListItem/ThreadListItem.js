@@ -17,7 +17,7 @@ export default class ThreadListItem extends Component {
 		}
 
 		return (
-			<div className="ThreadListItem">
+			<div className="ThreadListItem" onClick={(e)=>{this.props.onClick(e)}}>
 				<div className="ThreadListItem__topRow">
 					{(() => {if (thread.isCurrent)
 						return <span className="ThreadListItem__currentIndicator"></span>
