@@ -45,6 +45,7 @@ let browserHistory = createBrowserHistory()
 let store = createStoreWithMiddleware(combinedReducer)
 
 link.setStoreDispatcher(store.dispatch)
+link.setTokenProvider(() => store.getState().linkToken)
 
 syncReduxAndRouter(browserHistory, store) 
 

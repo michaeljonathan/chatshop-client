@@ -41,4 +41,14 @@
 		text-transform: uppercase;
 		color: #fff;
 	}
+
+	.LoginPage__error {
+		display: block;
+		min-height: 30px;
+		margin-top: 24px;
+		opacity: 0.5;
+		font-family: $font-general;
+		font-style: italic;
+		font-size: 14px;
+	}
 }

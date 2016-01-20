@@ -1,6 +1,6 @@
 import socketIoClient from 'socket.io-client'
 
-import { REQUEST_LOGIN, respondLogin } from './actions'
+import { REQUEST_LOGIN, respondLogin, REQUEST_INITIAL_DATA, respondInitialData } from './actions'
 
 /*
  * General config
@@ -17,11 +17,11 @@ let _EVENTNAME = 'coffee'
 
 
 /*
- * socket.io WebSocket - the connection to the server
+ * WebSocket connection, dispatcher, token provider
  */
 let _webSocket = false
-
 let _storeDispatcher = false
+let _tokenProvider = false
 
 
 
@@ -36,7 +36,9 @@ let _send = (payload) => {
 		return
 	}
 
-	_webSocket.emit(_EVENTNAME, Object.assign({}, _defaultPayload, payload))
+	let tokenPayload = (typeof(_tokenProvider) === 'function') ? { linkToken: _tokenProvider() } : {}
+
+	_webSocket.emit(_EVENTNAME, Object.assign({}, _defaultPayload, tokenPayload, payload))
 }
 
 
@@ -54,9 +56,12 @@ let _translateActionToRequestPayload = (action) => {
 					password: action.credentials.password
 				}
 			}
-			break
+		case REQUEST_INITIAL_DATA:
+			return {
+				action: 'initial-data-req'
+			}
 		default:
-			return false;
+			return false
 			break
 	}
 }
@@ -69,7 +74,7 @@ let _translateActionToRequestPayload = (action) => {
 let _translateResponsePayloadToAction = (payload) => {
 	switch (payload.action) {
 		case 'login-res':
-			return respondLogin(payload.status, payload.user)
+			return respondLogin(payload.status, payload.error, payload.user, payload.linkToken)
 			break
 		case 'meta':
 		default:
@@ -126,8 +131,18 @@ let setStoreDispatcher = (storeDispatcher) => {
 
 
 
+/*
+ * Set token provider for grabbing token off the state
+ */
+let setTokenProvider = (tokenProvider) => {
+	_tokenProvider = tokenProvider
+}
+
+
+
 export default {
 	connect,
 	middleware,
-	setStoreDispatcher
+	setStoreDispatcher,
+	setTokenProvider
 }

@@ -1,16 +1,12 @@
 import { createSelector } from 'reselect'
 
 const threadsIDsSelector = state => state.threadIDs
-
 const threadsMapSelector = state => state.threadsMap
-
 const messagesMapSelector = state => state.messagesMap
-
 const usersMapSelector = state => state.usersMap
-
 const currentUserIDselector = state => state.currentUserID
-
-const currentThreadIDselector = state => state.currentThreadID
+const uiLoginPageSelector = state => state.uiLoginPage
+const uiAppSelector = state => state.uiApp
 
 let messageContextDeriver = (message, threadsMap, usersMap) => {
 	/* Message Prop */
@@ -23,6 +19,15 @@ let messageContextDeriver = (message, threadsMap, usersMap) => {
 		thread: threadsMap[message.threadID]
 	}
 }
+
+export const loginPageSelector = createSelector(
+	uiLoginPageSelector,
+	(uiLoginPage) => {
+		return {
+			error: uiLoginPage.error
+		}
+	}
+)
 
 export const appSelector = createSelector(
 	usersMapSelector,
@@ -40,9 +45,9 @@ export const threadListSelector = createSelector(
 	threadsMapSelector,
 	messagesMapSelector,
 	usersMapSelector,
-	currentThreadIDselector,
+	uiAppSelector,
 
-	(threadIDs, threadsMap, messagesMap, usersMap, currentThreadID) => {
+	(threadIDs, threadsMap, messagesMap, usersMap, uiApp) => {
 
 		return {
 			threadList: threadIDs.map((threadID) => {
@@ -73,7 +78,7 @@ export const threadListSelector = createSelector(
 							description: thread.description,
 
 							latestMessage: latestMessage,
-							isCurrent: thread.id == currentThreadID,
+							isCurrent: thread.id == uiApp.currentThreadID,
 							unreadCount: unreadCount
 						}
 					case 'personal':
@@ -83,7 +88,7 @@ export const threadListSelector = createSelector(
 
 							other: usersMap[thread.other],
 							latestMessage: latestMessage,
-							isCurrent: thread.id == currentThreadID,
+							isCurrent: thread.id == uiApp.currentThreadID,
 							unreadCount: unreadCount
 						}
 					default:
@@ -100,18 +105,18 @@ export const conversationSelector = createSelector(
 	threadsMapSelector,
 	messagesMapSelector,
 	usersMapSelector,
-	currentThreadIDselector,
+	uiAppSelector,
 
-	(threadIDs, threadsMap, messagesMap, usersMap, currentThreadID) => {
+	(threadIDs, threadsMap, messagesMap, usersMap, uiApp) => {
 
-		if (!currentThreadID) {
+		if (!uiApp.currentThreadID) {
 			return {thread: false}
 		}
-		if (!threadsMap[currentThreadID]) {
+		if (!threadsMap[uiApp.currentThreadID]) {
 			return {thread: false}
 		}
 
-		let thread = threadsMap[currentThreadID];
+		let thread = threadsMap[uiApp.currentThreadID];
 		switch (thread.type) {
 			case 'group':
 				return {

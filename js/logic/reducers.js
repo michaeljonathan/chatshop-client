@@ -68,12 +68,34 @@ function currentUserID(currentUserID = false, action) {
 	}
 }
 
-function currentThreadID(currentThreadID = false, action) {
+function linkToken(linkToken = false, action) {
+	switch (action.type) {
+		case actions.RESPOND_LOGIN:
+			return (action.status == 'ok') ? action.linkToken : linkToken
+		default: 
+			return linkToken
+	}
+}
+
+function uiLoginPage(uiLoginPage = {
+	error: false
+}, action) {
+	switch (action.type) {
+		case actions.RESPOND_LOGIN:
+			return Object.assign({}, uiLoginPage, { error: action.error ? action.error : false })
+		default:
+			return uiLoginPage
+	}
+}
+
+function uiApp(uiApp = {
+	currentThreadID: false
+}, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_THREAD:
-			return action.threadID
-		default: 
-			return currentThreadID
+			return Object.assign({}, uiApp, { currentThreadID: action.threadID })
+		default:
+			return uiLoginPage
 	}
 }
 
@@ -83,5 +105,7 @@ export default {
 	messagesMap,
 	usersMap,
 	currentUserID,
-	currentThreadID
+	linkToken,
+	uiLoginPage,
+	uiApp
 }

@@ -42,8 +42,16 @@ let state = {
 			},
 		u2: {...}
 	},
+
 	currentUserID: 'u1',
-	currentThreadID: 't1'
+	linkToken: 't0ken',
+
+	uiLoginPage: {
+		error: 'invalid-credentials'
+	},
+	uiApp: {
+		currentThreadID: 't1'
+	}
 }
 
 /*

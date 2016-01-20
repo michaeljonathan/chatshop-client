@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
 import { requestLogin } from '../../logic/actions'
+import { loginPageSelector } from '../../logic/selectors'
 
 class LoginPage extends Component {
 
@@ -35,6 +36,7 @@ class LoginPage extends Component {
 	}
 
 	render() {
+		const { error } = this.props
 		return (
 			<div className="LoginPage">
 				<form className="LoginPage__cc" onSubmit={this.onSubmit}>
@@ -42,6 +44,9 @@ class LoginPage extends Component {
 					<input type="text" placeholder="username" ref="username" value={this.state.username} onChange={this.onUsernameChange}/>
 					<input type="password" placeholder="password" ref="password" value={this.state.password} onChange={this.onPasswordChange}/>
 					<input type="submit" className="btn--submit" value="Login"/>
+					{ error &&
+						<span className="LoginPage__error">{ error }</span>
+					}
 				</form>
 			</div>
 		)
@@ -49,15 +54,6 @@ class LoginPage extends Component {
 
 }
 
-function mapStateToInjectedProps(state) {
-	return {
-	}
-}
-
-LoginPage.propTypes = {
-	
-}
-
-let InjectedLoginPageComponent = connect(mapStateToInjectedProps)(LoginPage)
+let InjectedLoginPageComponent = connect(loginPageSelector)(LoginPage)
 
 export default InjectedLoginPageComponent

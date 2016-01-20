@@ -3,6 +3,9 @@ import { pushPath } from 'redux-simple-router'
 export const REQUEST_LOGIN = 'REQUEST_LOGIN';
 export const RESPOND_LOGIN = 'RESPOND_LOGIN';
 
+export const REQUEST_INITIAL_DATA = 'REQUEST_INITIAL_DATA';
+export const RESPOND_INITIAL_DATA = 'RESPOND_INITIAL_DATA';
+
 export const RECEIVE_THREAD = 'RECEIVE_THREAD';
 
 export const RECEIVE_MESSAGE = 'RECEIVE_MESSAGE';
@@ -23,16 +26,49 @@ export function requestLogin(credentials) {
 	}
 }
 
-export function respondLogin(status, user) {
-	return (dispatch) => {
+export function respondLogin(status, error, user, linkToken) {
+	return (dispatch, getState) => {
+
+		// Update state (currentUser + linkToken, and/or LoginPage)
 		dispatch({
 			type: RESPOND_LOGIN,
 			status: status,
-			user: user
+			error: error,
+			user: user,
+			linkToken: linkToken
 		})
+
+		// Navigate to home
 		if (status == 'ok') {
 			dispatch(pushPath('/'))
 		}
+
+		// Request initial data
+		if (status == 'ok') {
+			dispatch(requestInitialData())
+		}
+	}
+}
+
+//////////////////
+// Initial Data //
+//////////////////
+
+export function requestInitialData() {
+	return (dispatch, getState) => {
+		const { linkToken } = getState()
+		dispatch({
+			type: REQUEST_INITIAL_DATA,
+			linkToken: linkToken
+		})
+	}
+}
+
+export function respondInitialData(status, initialData) {
+	return {
+		type: RESPOND_INITIAL_DATA,
+		status: status,
+		initialData: initialData
 	}
 }
 
