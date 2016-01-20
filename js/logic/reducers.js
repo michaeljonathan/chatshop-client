@@ -48,6 +48,10 @@ function usersMap(usersMap = {}, action) {
 			return Object.assign({}, usersMap, {
 				[action.userData.id]: action.userData
 			})
+		case actions.RESPOND_LOGIN:
+			return (action.status == 'ok') ? Object.assign({}, usersMap, {
+				[action.user.id]: action.user
+			}) : usersMap
 		default: 
 			return usersMap
 	}
@@ -57,6 +61,8 @@ function currentUserID(currentUserID = false, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_USER:
 			return action.userID
+		case actions.RESPOND_LOGIN:
+			return (action.status == 'ok') ? action.user.id : currentUserID
 		default: 
 			return currentUserID
 	}

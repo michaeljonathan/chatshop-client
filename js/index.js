@@ -10,18 +10,19 @@ import { applyMiddleware, combineReducers, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import { syncReduxAndRouter, routeReducer } from 'redux-simple-router'
-import socketIoClient from 'socket.io-client'
 import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 // Logic
 import appReducers from './logic/reducers'
+import link from './logic/link'
 
 // Components
 import App from './components/App'
 import AboutPage from './components/AboutPage'
+import LoginPage from './components/LoginPage'
 
 // Style
-import '../css/app.scss'
+import '../css/style.scss'
 
 
 
@@ -31,7 +32,8 @@ import '../css/app.scss'
 
 // Logic
 let createStoreWithMiddleware = applyMiddleware(
-	thunk
+	thunk,
+	link.middleware
 )(createStore)
 
 let combinedReducer = combineReducers(Object.assign({}, appReducers, {
@@ -42,17 +44,12 @@ let browserHistory = createBrowserHistory()
 
 let store = createStoreWithMiddleware(combinedReducer)
 
+link.setStoreDispatcher(store.dispatch)
+
 syncReduxAndRouter(browserHistory, store) 
 
 // Socket
-var webSocket = socketIoClient('http://localhost:3005')
-webSocket.emit('CLIENT_ARRIVED', {
-	name: 'User 1'
-})
-webSocket.on('NOTIFICATION', function(data) {
-	console.log('Notification received:');
-	console.log(data);
-})
+link.connect('http://localhost:3005/chatshop')
 
 // Components
 let rootElement = document.querySelector('.content')
@@ -62,6 +59,7 @@ render(
 		<Router history={browserHistory}>
 			<Route path="/" component={App} />
 			<Route path="/about" component={AboutPage} />
+			<Route path="/login" component={LoginPage} />
 		</Router>
 	</Provider>,
 	rootElement
@@ -72,19 +70,20 @@ render(
  * Testing one two
  */
 
-window.store = store;
-window.actions = actions;
+window.store = store
 
 function printState() {
-	console.log(store.getState());
+	console.log('[state updated]', store.getState())
 }
 
-printState();
+printState()
 store.subscribe(function() {
-	printState();
-});
+	printState()
+})
 
+/*
 import * as actions from './logic/actions'
+window.actions = actions
 
 store.dispatch(actions.receiveUser({
 	id: 'u1',
@@ -145,4 +144,4 @@ store.dispatch(actions.receiveMessage({
 store.dispatch(actions.setCurrentUser('u1'));
 store.dispatch(actions.setCurrentThread('t2'));
 store.dispatch(actions.sendMessage({}));
-
+*/

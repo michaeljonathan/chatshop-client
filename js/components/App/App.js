@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
+import { pushPath } from 'redux-simple-router'
 
 import Conversation from '../Conversation'
 import ThreadList from '../ThreadList'
@@ -8,6 +9,12 @@ import ThreadList from '../ThreadList'
 import { appSelector } from '../../logic/selectors'
 
 class App extends Component {
+	componentWillMount() {
+		const { dispatch, currentUser } = this.props
+		if (!currentUser) {
+			dispatch(pushPath('/login'))
+		}
+	}
 	render() {
 		const { dispatch, currentUser } = this.props
 		return (

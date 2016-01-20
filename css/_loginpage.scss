@@ -1,0 +1,44 @@
+/* 
+ * LoginPage
+ */
+
+.LoginPage {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+
+	.LoginPage__cc {
+		text-align: center;
+		width: 90%;
+		max-width: 250px;
+	}
+
+	h1 {
+		margin-bottom: 20px;
+		font-family: $font-heading;
+		text-transform: uppercase;
+		letter-spacing: 1.5;
+	}
+
+	input {
+		font-family: $font-general;
+		display: block;
+		margin-bottom: 10px;
+		font-size: 16px;
+		padding: 2px 5px;
+		width: 100%;
+	}
+
+	.btn--submit {
+		margin-top: 5px;
+		width: 100%;
+		padding: 8px 14px 9px;
+		background-color: $color-grey;
+		border: none;
+		font-size: 12px;
+		font-family: $font-heading;
+		text-transform: uppercase;
+		color: #fff;
+	}
+}
