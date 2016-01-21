@@ -75,7 +75,12 @@ let _translateResponsePayloadToAction = (payload) => {
 	switch (payload.action) {
 		case 'login-res':
 			return respondLogin(payload.status, payload.error, payload.user, payload.linkToken)
-			break
+		case 'initial-data-res':
+			return respondInitialData(payload.status, payload.error, payload.initialData ? {
+				threads: payload.initialData.threads,
+				messages: payload.initialData.messages,
+				users: payload.initialData.users
+			} : {})
 		case 'meta':
 		default:
 			return false

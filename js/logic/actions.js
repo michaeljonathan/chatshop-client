@@ -64,10 +64,11 @@ export function requestInitialData() {
 	}
 }
 
-export function respondInitialData(status, initialData) {
+export function respondInitialData(status, error, initialData) {
 	return {
 		type: RESPOND_INITIAL_DATA,
 		status: status,
+		error: error,
 		initialData: initialData
 	}
 }

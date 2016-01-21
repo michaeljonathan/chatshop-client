@@ -2,6 +2,11 @@ import * as actions from './actions'
 
 function threadIDs(threadIDs = [], action) {
 	switch (action.type) {
+		case actions.RESPOND_INITIAL_DATA:
+			if (action.status == 'ok' && action.initialData && action.initialData.threads) {
+				return action.initialData.threads.map(thread => thread.id)
+			}
+			return threadIDs
 		case actions.RECEIVE_THREAD:
 			return [action.threadData.id, ...threadIDs]
 		default: 
@@ -11,6 +16,20 @@ function threadIDs(threadIDs = [], action) {
 
 function threadsMap(threadsMap = {}, action) {
 	switch (action.type) {
+		case actions.RESPOND_INITIAL_DATA:
+			if (action.status == 'ok' && action.initialData && action.initialData.threads) {
+				let threadsMap = action.initialData.threads.reduce((threadsMap, thread) => {
+					threadsMap[thread.id] = thread
+					return threadsMap
+				}, {})
+				if (action.initialData.messages) {
+					action.initialData.messages.map(message => {
+						(threadsMap[message.threadID]).messageIDs.push(message.id)
+					})
+				}
+				return threadsMap
+			}
+			return threadsMap
 		case actions.RECEIVE_THREAD:
 			return Object.assign({}, threadsMap, {
 				[action.threadData.id]: action.threadData
@@ -32,6 +51,14 @@ function threadsMap(threadsMap = {}, action) {
 
 function messagesMap(messagesMap = {}, action) {
 	switch (action.type) {
+		case actions.RESPOND_INITIAL_DATA:
+			if (action.status == 'ok' && action.initialData && action.initialData.messages) {
+				return action.initialData.messages.reduce((messagesMap, message) => {
+					messagesMap[message.id] = message
+					return messagesMap
+				}, messagesMap)
+			}
+			return messagesMap
 		case actions.RECEIVE_MESSAGE:
 			var messageData = action.messageData;
 			return Object.assign({}, messagesMap, {
@@ -44,6 +71,14 @@ function messagesMap(messagesMap = {}, action) {
 
 function usersMap(usersMap = {}, action) {
 	switch (action.type) {
+		case actions.RESPOND_INITIAL_DATA:
+			if (action.status == 'ok' && action.initialData && action.initialData.users) {
+				return action.initialData.users.reduce((usersMap, user) => {
+					usersMap[user.id] = user
+					return usersMap
+				}, usersMap)
+			}
+			return usersMap
 		case actions.RECEIVE_USER:
 			return Object.assign({}, usersMap, {
 				[action.userData.id]: action.userData
