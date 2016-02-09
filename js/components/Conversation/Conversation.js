@@ -1,18 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import classNames from 'classnames'
 
-import { requestSendMessage } from '../../logic/actions'
+import { composerUpdateDraft, requestSendMessage } from '../../logic/actions'
 import { conversationSelector } from '../../logic/selectors'
 
 class Conversation extends Component {
 
 	constructor() {
 		super()
+		this.onChangeComposer = this.onChangeComposer.bind(this)
 		this.onClickSend = this.onClickSend.bind(this)
+		this.onKeyPressComposer = this.onKeyPressComposer.bind(this)
+	}
+
+	onChangeComposer(e) {
+		const { dispatch, thread } = this.props
+		dispatch(composerUpdateDraft(thread, e.target.value))
 	}
 
 	onClickSend() {
-		const { dispatch, thread, currentUser } = this.props
+		const { dispatch, currentUser, thread } = this.props
 
 		let messageText = this.refs.textComposer.value
 		if (!messageText) {
@@ -20,6 +28,13 @@ class Conversation extends Component {
 		}
 
 		dispatch(requestSendMessage(thread, currentUser, messageText))
+		dispatch(composerUpdateDraft(thread, ''))
+	}
+
+	onKeyPressComposer(e) {
+		if ((e.keyCode || e.which) == 13) { // Enter
+			this.onClickSend()
+		}
 	}
 
 	render() {
@@ -66,10 +81,10 @@ class Conversation extends Component {
 				</div>
 				<div className="Conversation__composer">
 					<div className="Conversation__composerInputContainer">
-						<input type="text" placeholder="Write something..." ref="textComposer"/>
+						<input type="text" placeholder="Write something..." ref="textComposer" value={thread.messageDraft} onChange={this.onChangeComposer} onKeyPress={this.onKeyPressComposer}/>
 					</div>
 					<div className="Conversation__composerControls">
-						<div className="Conversation__buttonSend" onClick={this.onClickSend}>Send</div>
+						<div className={classNames("Conversation__buttonSend", {"Conversation__buttonSend-enabled": thread.messageDraft})} onClick={this.onClickSend}>Send</div>
 					</div>
 				</div>
 			</div>

@@ -136,6 +136,7 @@ export const conversationSelector = createSelector(
 						title: thread.title,
 						description: thread.description,
 						unreadSince: thread.unreadSince,
+						messageDraft: thread.messageDraft,
 
 						messages: thread.messageKeys.map((messageKey) => {
 							return messageContextDeriver(messagesMap[messageKey], threadsMap, usersMap)
@@ -148,6 +149,7 @@ export const conversationSelector = createSelector(
 						key: thread.key,
 						type: thread.type,
 						unreadSince: thread.unreadSince,
+						messageDraft: thread.messageDraft,
 
 						other: usersMap[thread.otherKey],
 						messages: thread.messageKeys.map((messageKey) => {

@@ -15,7 +15,8 @@ let state = {
 				participantIDs: ['u1'], // not important?
 				participantKeys: ['u1--abc'],
 				messageKeys: ['m1--abc'],
-				unreadSince: 'm1--abc'
+				unreadSince: 'm1--abc',
+				messageDraft: 'Lorem ipsum'
 			},
 		t2--abc:
 			{
@@ -25,7 +26,8 @@ let state = {
 				other: 'u2', // not important?
 				otherKey: 'u2--abc',
 				messageKeys: ['m2--abc'],
-				unreadSince: false
+				unreadSince: false,
+				messageDraft: ''
 			}
 	},
 	messagesMap: {

@@ -15,6 +15,8 @@ export const RESPOND_SEND_MESSAGE = 'RESPOND_SEND_MESSAGE';
 
 export const RECEIVE_USER = 'RECEIVE_USER';
 
+export const COMPOSER_UPDATE_DRAFT = 'COMPOSER_UPDATE_DRAFT';
+
 export const SET_CURRENT_THREAD = 'SET_CURRENT_THREAD';
 export const SET_CURRENT_USER = 'SET_CURRENT_USER';
 
@@ -154,6 +156,14 @@ export function receiveThread(threadData) {
 	return {
 		type: RECEIVE_THREAD,
 		threadData: threadData
+	}
+}
+
+export function composerUpdateDraft(thread, messageText) {
+	return {
+		type: COMPOSER_UPDATE_DRAFT,
+		thread,
+		messageText
 	}
 }
 

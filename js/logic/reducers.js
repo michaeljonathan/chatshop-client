@@ -19,7 +19,9 @@ function threadsMap(threadsMap = {}, action) {
 		case actions.RESPOND_INITIAL_DATA:
 			if (action.status == 'ok' && action.initialData && action.initialData.threads) {
 				let threadsMap = action.initialData.threads.reduce((threadsMap, thread) => {
-					threadsMap[thread.key] = thread
+					threadsMap[thread.key] = Object.assign({}, thread, {
+						messageDraft: ''
+					})
 					return threadsMap
 				}, {})
 				if (action.initialData.messages) {
@@ -51,7 +53,13 @@ function threadsMap(threadsMap = {}, action) {
 					messageKeys: [...(thread.messageKeys), action.messageKey]
 				})
 			})
-		default: 
+		case actions.COMPOSER_UPDATE_DRAFT:
+			return Object.assign({}, threadsMap, {
+				[action.thread.key]: Object.assign({}, threadsMap[action.thread.key], {
+					messageDraft: action.messageText
+				})
+			})
+		default:
 			return threadsMap
 	}
 }
