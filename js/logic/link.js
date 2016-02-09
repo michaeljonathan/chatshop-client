@@ -1,6 +1,10 @@
 import socketIoClient from 'socket.io-client'
 
-import { REQUEST_LOGIN, respondLogin, REQUEST_INITIAL_DATA, respondInitialData } from './actions'
+import {
+	REQUEST_LOGIN, respondLoginAsync,
+	REQUEST_INITIAL_DATA, respondInitialDataAsync,
+	REQUEST_SEND_MESSAGE, respondSendMessageAsync
+} from './actions'
 
 /*
  * General config
@@ -60,6 +64,15 @@ let _translateActionToRequestPayload = (action) => {
 			return {
 				action: 'initial-data-req'
 			}
+		case REQUEST_SEND_MESSAGE:
+			return {
+				action: 'message-send-req',
+				message: {
+					threadID: action.thread.id,
+					message: action.messageText,
+					key: action.messageKey
+				}
+			}
 		default:
 			return false
 			break
@@ -74,13 +87,15 @@ let _translateActionToRequestPayload = (action) => {
 let _translateResponsePayloadToAction = (payload) => {
 	switch (payload.action) {
 		case 'login-res':
-			return respondLogin(payload.status, payload.error, payload.user, payload.linkToken)
+			return respondLoginAsync(payload.status, payload.error, payload.user, payload.linkToken)
 		case 'initial-data-res':
-			return respondInitialData(payload.status, payload.error, payload.initialData ? {
+			return respondInitialDataAsync(payload.status, payload.error, payload.initialData ? {
 				threads: payload.initialData.threads,
 				messages: payload.initialData.messages,
 				users: payload.initialData.users
 			} : {})
+		case 'message-send-res':
+			return respondSendMessageAsync(payload.status, payload.error, payload.key)
 		case 'meta':
 		default:
 			return false

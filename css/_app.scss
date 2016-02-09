@@ -235,13 +235,9 @@
 				padding: 8px 12px;
 				outline: none;
 				font-family: $font-general;
-				font-style: italic;
 				font-size: 14px;
-				&:focus {
-					font-style: normal;
-					&::-webkit-input-placeholder {
-						color: transparent;
-					}
+				&::-webkit-input-placeholder {
+					font-style: italic;
 				}
 			}
 		}

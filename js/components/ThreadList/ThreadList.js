@@ -8,7 +8,7 @@ import ThreadListItem from '../ThreadListItem'
 
 class ThreadList extends Component {
 	render() {
-		const { dispatch, threadList } = this.props
+		const { dispatch, currentUser, threadList } = this.props
 		return (
 			<div className="ThreadList">
 				<div className="ThreadList__header">
@@ -21,8 +21,8 @@ class ThreadList extends Component {
 				</div>
 				<div className="ThreadList__list">
 					{threadList.map((thread, index) => 
-						<ThreadListItem thread={thread} key={index}
-						onClick={()=>{dispatch(setCurrentThread(thread.id))}} />
+						<ThreadListItem currentUser={currentUser} thread={thread} key={thread.key}
+						onClick={()=>{dispatch(setCurrentThread(thread.key))}} />
 					)}
 				</div>
 			</div>

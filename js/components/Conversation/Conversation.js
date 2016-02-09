@@ -1,11 +1,29 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { requestSendMessage } from '../../logic/actions'
 import { conversationSelector } from '../../logic/selectors'
 
 class Conversation extends Component {
+
+	constructor() {
+		super()
+		this.onClickSend = this.onClickSend.bind(this)
+	}
+
+	onClickSend() {
+		const { dispatch, thread, currentUser } = this.props
+
+		let messageText = this.refs.textComposer.value
+		if (!messageText) {
+			return
+		}
+
+		dispatch(requestSendMessage(thread, currentUser, messageText))
+	}
+
 	render() {
-		const { thread } = this.props
+		const { currentUser, thread } = this.props
 
 		var threadTitle;
 		switch (thread.type) {
@@ -36,7 +54,10 @@ class Conversation extends Component {
 							return thread.messages.map((message, index) =>
 								<div className="Conversation__message" key={index}>
 									<div className="Conversation__message__author">{message.author.name}</div>
-									<div className="Conversation__message__date">{message.date.slice(0, 10)}</div>
+									<div className="Conversation__message__date">
+										{message.author == currentUser ? (message.isSending ? '◷ ' : '✓ ') : ''}
+										{message.date.slice(0, 10)}
+									</div>
 									<div className="Conversation__message__message">{message.message}</div>
 								</div>
 							)
@@ -45,10 +66,10 @@ class Conversation extends Component {
 				</div>
 				<div className="Conversation__composer">
 					<div className="Conversation__composerInputContainer">
-						<input type="text" placeholder="Write something..."/>
+						<input type="text" placeholder="Write something..." ref="textComposer"/>
 					</div>
 					<div className="Conversation__composerControls">
-						<div className="Conversation__buttonSend">Send</div>
+						<div className="Conversation__buttonSend" onClick={this.onClickSend}>Send</div>
 					</div>
 				</div>
 			</div>

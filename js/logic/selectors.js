@@ -1,10 +1,10 @@
 import { createSelector } from 'reselect'
 
-const threadsIDsSelector = state => state.threadIDs
+const threadKeysSelector = state => state.threadKeys
 const threadsMapSelector = state => state.threadsMap
 const messagesMapSelector = state => state.messagesMap
 const usersMapSelector = state => state.usersMap
-const currentUserIDselector = state => state.currentUserID
+const currentUserKeySelector = state => state.currentUserKey
 const uiLoginPageSelector = state => state.uiLoginPage
 const uiAppSelector = state => state.uiApp
 
@@ -12,11 +12,13 @@ let messageContextDeriver = (message, threadsMap, usersMap) => {
 	/* Message Prop */
 	return {
 		id: message.id,
+		key: message.key,
 		date: message.date,
 		message: message.message,
+		isSending: message.isSending,
 
-		author: usersMap[message.authorID],
-		thread: threadsMap[message.threadID]
+		author: usersMap[message.authorKey],
+		thread: threadsMap[message.threadKey]
 	}
 }
 
@@ -31,122 +33,133 @@ export const loginPageSelector = createSelector(
 
 export const appSelector = createSelector(
 	usersMapSelector,
-	currentUserIDselector,
-	(usersMap, currentUserID) => {
+	currentUserKeySelector,
+	(usersMap, currentUserKey) => {
 		return {
-			currentUser: usersMap[currentUserID]
+			currentUser: usersMap[currentUserKey]
 		}
 	}
 )
 
 export const threadListSelector = createSelector(
 
-	threadsIDsSelector,
+	threadKeysSelector,
 	threadsMapSelector,
 	messagesMapSelector,
 	usersMapSelector,
+	currentUserKeySelector,
 	uiAppSelector,
 
-	(threadIDs, threadsMap, messagesMap, usersMap, uiApp) => {
+	(threadKeys, threadsMap, messagesMap, usersMap, currentUserKey, uiApp) => {
 
-		return {
-			threadList: threadIDs.map((threadID) => {
-
-				let thread = threadsMap[threadID]
-
-				let latestMessage = undefined
-				if (thread.messageIDs.length) {
-					latestMessage = messagesMap[thread.messageIDs[thread.messageIDs.length - 1]]
-					latestMessage = messageContextDeriver(latestMessage, threadsMap, usersMap)
-				}
-
-				let unreadCount = 0
-				if (thread.unreadSince && thread.messageIDs.length) {
-					let indexOfUnreadMessage = thread.messageIDs.indexOf(thread.unreadSince)
-					if (indexOfUnreadMessage >= 0) {
-						unreadCount = thread.messageIDs.length - indexOfUnreadMessage - 1
-					}
-				}
-
-				/* ThreadList->Thread Prop */
-				switch (thread.type) {
-					case 'group':
-						return {
-							id: thread.id,
-							type: thread.type,
-							title: thread.title,
-							description: thread.description,
-
-							latestMessage: latestMessage,
-							isCurrent: thread.id == uiApp.currentThreadID,
-							unreadCount: unreadCount
-						}
-					case 'personal':
-						return {
-							id: thread.id,
-							type: thread.type,
-
-							other: usersMap[thread.other],
-							latestMessage: latestMessage,
-							isCurrent: thread.id == uiApp.currentThreadID,
-							unreadCount: unreadCount
-						}
-					default:
-						break;
-				}
-			})
+		let props = {
+			threadList: false,
+			currentUser: currentUserKey ? usersMap[currentUserKey] : false
 		}
+
+		props.threadList = threadKeys.map((threadKey) => {
+
+			let thread = threadsMap[threadKey]
+
+			let latestMessage
+			if (thread.messageKeys.length) {
+				latestMessage = messagesMap[thread.messageKeys[thread.messageKeys.length - 1]]
+				latestMessage = messageContextDeriver(latestMessage, threadsMap, usersMap)
+			}
+
+			let unreadCount = 0
+			if (thread.unreadSince && thread.messageKeys.length) {
+				let indexOfUnreadMessage = thread.messageKeys.indexOf(thread.unreadSince)
+				if (indexOfUnreadMessage >= 0) {
+					unreadCount = thread.messageKeys.length - indexOfUnreadMessage - 1
+				}
+			}
+
+			/* ThreadList->Thread Prop */
+			switch (thread.type) {
+				case 'group':
+					return {
+						key: thread.key,
+						type: thread.type,
+						title: thread.title,
+						description: thread.description,
+
+						latestMessage,
+						unreadCount,
+
+						isCurrent: thread.key == uiApp.currentThreadKey
+					}
+				case 'personal':
+					return {
+						key: thread.key,
+						type: thread.type,
+						other: usersMap[thread.otherKey],
+
+						latestMessage,
+						unreadCount,
+
+						isCurrent: thread.key == uiApp.currentThreadKey
+					}
+				default:
+					break;
+			}
+		})
+
+		return props
 	}
 )
 
 export const conversationSelector = createSelector(
 
-	threadsIDsSelector,
+	threadKeysSelector,
 	threadsMapSelector,
 	messagesMapSelector,
 	usersMapSelector,
+	currentUserKeySelector,
 	uiAppSelector,
 
-	(threadIDs, threadsMap, messagesMap, usersMap, uiApp) => {
+	(threadKeys, threadsMap, messagesMap, usersMap, currentUserKey, uiApp) => {
 
-		if (!uiApp.currentThreadID) {
-			return {thread: false}
-		}
-		if (!threadsMap[uiApp.currentThreadID]) {
-			return {thread: false}
+		let props = {
+			thread: false,
+			currentUser: currentUserKey ? usersMap[currentUserKey] : false
 		}
 
-		let thread = threadsMap[uiApp.currentThreadID];
-		switch (thread.type) {
-			case 'group':
-				return {
-					thread: {
+		if (uiApp.currentThreadKey && threadsMap[uiApp.currentThreadKey]) {
+			let thread = threadsMap[uiApp.currentThreadKey];
+			switch (thread.type) {
+				case 'group':
+					props.thread = {
 						id: thread.id,
+						key: thread.key,
 						type: thread.type,
 						title: thread.title,
 						description: thread.description,
 						unreadSince: thread.unreadSince,
 
-						messages: thread.messageIDs.map((messageID) => {
-							return messageContextDeriver(messagesMap[messageID], threadsMap, usersMap)
+						messages: thread.messageKeys.map((messageKey) => {
+							return messageContextDeriver(messagesMap[messageKey], threadsMap, usersMap)
 						})
 					}
-				}
-			case 'personal':
-				return {
-					thread: {
+					break;
+				case 'personal':
+					props.thread = {
 						id: thread.id,
+						key: thread.key,
 						type: thread.type,
 						unreadSince: thread.unreadSince,
 
-						other: usersMap[thread.other],
-						messages: thread.messageIDs.map((messageID) => {
-							return messageContextDeriver(messagesMap[messageID], threadsMap, usersMap)
+						other: usersMap[thread.otherKey],
+						messages: thread.messageKeys.map((messageKey) => {
+							return messageContextDeriver(messagesMap[messageKey], threadsMap, usersMap)
 						})
 					}
-				}
-			default:
-				break;
+					break;
+				default:
+					break;
+			}
 		}
+
+		return props
 	}
 )

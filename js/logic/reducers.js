@@ -1,16 +1,16 @@
 import * as actions from './actions'
 
-function threadIDs(threadIDs = [], action) {
+function threadKeys(threadKeys = [], action) {
 	switch (action.type) {
 		case actions.RESPOND_INITIAL_DATA:
 			if (action.status == 'ok' && action.initialData && action.initialData.threads) {
-				return action.initialData.threads.map(thread => thread.id)
+				return action.initialData.threads.map(thread => thread.key)
 			}
-			return threadIDs
+			return threadKeys
 		case actions.RECEIVE_THREAD:
-			return [action.threadData.id, ...threadIDs]
+			return [action.threadData.key, ...threadKeys]
 		default: 
-			return threadIDs
+			return threadKeys
 	}
 }
 
@@ -19,12 +19,12 @@ function threadsMap(threadsMap = {}, action) {
 		case actions.RESPOND_INITIAL_DATA:
 			if (action.status == 'ok' && action.initialData && action.initialData.threads) {
 				let threadsMap = action.initialData.threads.reduce((threadsMap, thread) => {
-					threadsMap[thread.id] = thread
+					threadsMap[thread.key] = thread
 					return threadsMap
 				}, {})
 				if (action.initialData.messages) {
 					action.initialData.messages.map(message => {
-						(threadsMap[message.threadID]).messageIDs.push(message.id)
+						(threadsMap[message.threadKey]).messageKeys.push(message.key)
 					})
 				}
 				return threadsMap
@@ -32,16 +32,23 @@ function threadsMap(threadsMap = {}, action) {
 			return threadsMap
 		case actions.RECEIVE_THREAD:
 			return Object.assign({}, threadsMap, {
-				[action.threadData.id]: action.threadData
+				[action.threadData.key]: action.threadData
 			})
 		case actions.RECEIVE_MESSAGE:
 			var messageData = action.messageData;
-			var threadID = messageData.threadID;
-			var thread = threadsMap[threadID];
+			var threadKey = messageData.threadKey;
+			var thread = threadsMap[threadKey];
 			return Object.assign({}, threadsMap, {
-				[threadID]: Object.assign({}, thread, {
-					messageIDs: [...(thread.messageIDs), messageData.id],
-					unreadSince: thread.unreadSince || messageData.id
+				[threadKey]: Object.assign({}, thread, {
+					messageKeys: [...(thread.messageKeys), messageData.key],
+					unreadSince: thread.unreadSince || messageData.key
+				})
+			})
+		case actions.REQUEST_SEND_MESSAGE:
+			var thread = threadsMap[action.thread.key];
+			return Object.assign({}, threadsMap, {
+				[thread.key]: Object.assign({}, thread, {
+					messageKeys: [...(thread.messageKeys), action.messageKey]
 				})
 			})
 		default: 
@@ -54,15 +61,38 @@ function messagesMap(messagesMap = {}, action) {
 		case actions.RESPOND_INITIAL_DATA:
 			if (action.status == 'ok' && action.initialData && action.initialData.messages) {
 				return action.initialData.messages.reduce((messagesMap, message) => {
-					messagesMap[message.id] = message
+					messagesMap[message.key] = Object.assign({}, message, {
+						isSending: false
+					})
 					return messagesMap
-				}, messagesMap)
+				}, {})
 			}
 			return messagesMap
 		case actions.RECEIVE_MESSAGE:
 			var messageData = action.messageData;
 			return Object.assign({}, messagesMap, {
-				[messageData.id]: messageData
+				[messageData.key]: messageData
+			})
+		case actions.REQUEST_SEND_MESSAGE:
+			var messageData = {
+				id: '-',
+				key: action.messageKey,
+				threadID: action.thread.id,
+				threadKey: action.thread.key,
+				authorID: action.messageAuthor.id,
+				authorKey: action.messageAuthor.key,
+				date: (new Date()).toString(),
+				message: action.messageText,
+				isSending: true
+			}
+			return Object.assign({}, messagesMap, {
+				[messageData.key]: messageData
+			})
+		case actions.RESPOND_SEND_MESSAGE:
+			return Object.assign({}, messagesMap, {
+				[action.messageKey]:  Object.assign({}, messagesMap[action.messageKey], {
+					isSending: false
+				})
 			})
 		default:
 			return messagesMap;
@@ -74,32 +104,32 @@ function usersMap(usersMap = {}, action) {
 		case actions.RESPOND_INITIAL_DATA:
 			if (action.status == 'ok' && action.initialData && action.initialData.users) {
 				return action.initialData.users.reduce((usersMap, user) => {
-					usersMap[user.id] = user
+					usersMap[user.key] = user
 					return usersMap
-				}, usersMap)
+				}, {})
 			}
 			return usersMap
 		case actions.RECEIVE_USER:
 			return Object.assign({}, usersMap, {
-				[action.userData.id]: action.userData
+				[action.userData.key]: action.userData
 			})
 		case actions.RESPOND_LOGIN:
 			return (action.status == 'ok') ? Object.assign({}, usersMap, {
-				[action.user.id]: action.user
+				[action.user.key]: action.user
 			}) : usersMap
 		default: 
 			return usersMap
 	}
 }
 
-function currentUserID(currentUserID = false, action) {
+function currentUserKey(currentUserKey = false, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_USER:
-			return action.userID
+			return action.userKey
 		case actions.RESPOND_LOGIN:
-			return (action.status == 'ok') ? action.user.id : currentUserID
-		default: 
-			return currentUserID
+			return (action.status == 'ok') ? action.user.key : currentUserKey
+		default:
+			return currentUserKey
 	}
 }
 
@@ -124,22 +154,22 @@ function uiLoginPage(uiLoginPage = {
 }
 
 function uiApp(uiApp = {
-	currentThreadID: false
+	currentThreadKey: false
 }, action) {
 	switch (action.type) {
 		case actions.SET_CURRENT_THREAD:
-			return Object.assign({}, uiApp, { currentThreadID: action.threadID })
+			return Object.assign({}, uiApp, { currentThreadKey: action.threadKey })
 		default:
-			return uiLoginPage
+			return uiApp
 	}
 }
 
 export default {
-	threadIDs,
+	threadKeys,
 	threadsMap,
 	messagesMap,
 	usersMap,
-	currentUserID,
+	currentUserKey,
 	linkToken,
 	uiLoginPage,
 	uiApp

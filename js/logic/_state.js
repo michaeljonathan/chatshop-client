@@ -3,54 +3,63 @@
  */
 
 let state = {
-	threadIDs: ['t1'],
+	threadKeys: ['t1--abc', 't2--abc'],
 	threadsMap: {
-		t1:
+		t1--abc:
 			{
-				id: 't1',
+				id: 't1', // not important?
+				key: 't1--abc',
 				type: 'group',
 				title: 'Team Updates',
 				description: 'Late? Sick? Leaving early? Post in here to let the team know.',
-				participantIDs: ['u1'],
-				messageIDs: ['m1'],
-				unreadSince: 'm1'
+				participantIDs: ['u1'], // not important?
+				participantKeys: ['u1--abc'],
+				messageKeys: ['m1--abc'],
+				unreadSince: 'm1--abc'
 			},
-		t2:
+		t2--abc:
 			{
-				id: 't2',
+				id: 't2', // not important?
+				key: 't2--abc',
 				type: 'personal',
-				other: 'u2',
-				messageIDs: ['m2'],
+				other: 'u2', // not important?
+				otherKey: 'u2--abc',
+				messageKeys: ['m2--abc'],
 				unreadSince: false
 			}
 	},
 	messagesMap: {
-		m1: {
-			id: 'm1',
-			threadID: 't1',
-			authorID: 'u1',
+		m1--abc: {
+			id: 'm1', // not important?
+			key: 'm1--abc',
+			threadID: 't1', // not important?
+			threadKey: 't1--abc',
+			authorID: 'u1', // not important?
+			authorKey: 'u1--abc',
 			date: 'Thu Dec 03 2015 12:00:00 GMT+1100 (AEDT)',
-			message: 'Hi what\'s up everybody.'
+			message: 'Hi what\'s up everybody.',
+			isSending: false
 		},
-		m2: {...}
+		m2--abc: {...}
 	},
 	usersMap: {
-		u1:
+		u1--abc:
 			{
-				id: 'u1',
+				id: 'u1', // not important?
+				key: 'u1--abc',
 				name: 'MJ'
 			},
-		u2: {...}
+		u2--abc: {...}
 	},
 
-	currentUserID: 'u1',
+	currentUserKey: 'u1--abc',
 	linkToken: 't0ken',
 
 	uiLoginPage: {
 		error: 'invalid-credentials'
 	},
 	uiApp: {
-		currentThreadID: 't1'
+		currentThreadKey: 't1--abc'
 	}
 }
 
@@ -84,7 +93,7 @@ let threadListDerivedState = {
 			id: 't2',
 			type: 'personal',
 
-			other: -> usersMap.u2
+			other: -> usersMap.u2--abc
 			latestMessage: {
 				* messages.m2(derived) *
 			},
@@ -100,14 +109,14 @@ let threadListDerivedState = {
 
 let conversationDerivedState = {
 	thread: {
-		id: 't1',
+		key: 't1--abc',
 		type: 'group',
 		title: 'Team Updates',
 		description: 'Late? Sick? Leaving early? Post in here to let the team know.',
-		unreadSince: 'm1',
+		unreadSince: 'm1--abc',
 		messages: [
 			{
-				* messages.m1(derived) *
+				* messages.m1--abc(derived) *
 			}
 		]
 	}
@@ -118,10 +127,10 @@ let conversationDerivedState = {
  */
 
 let messageDerived = {
-	id: 'm1',
+	key: 'm1--abc',
 	date: 'Thu Dec 03 2015 12:00:00 GMT+1100 (AEDT)',
 	message: 'Hi what\'s up everybody.',
 
-	author: -> usersMap.u1,
-	thread: -> threadsMap.t1
+	author: -> usersMap.u1--abc,
+	thread: -> threadsMap.t1--abc
 }

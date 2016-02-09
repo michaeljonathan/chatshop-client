@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 export default class ThreadListItem extends Component {
 	render() {
-		const thread = this.props.thread;
+		const { currentUser, thread } = this.props;
 
 		var threadTitle;
 		switch (thread.type) {
@@ -27,7 +27,10 @@ export default class ThreadListItem extends Component {
 				</div>
 				<div className="ThreadListItem__secondRow">
 					{(() => {if (thread.latestMessage) {
-						return <div className="ThreadListItem__snippet">{thread.latestMessage.author.name}: {thread.latestMessage.message}</div>
+						return	<div className="ThreadListItem__snippet">
+									{thread.latestMessage.author == currentUser ? (thread.latestMessage.isSending ? '◷ ' : '✓ ') : ''}
+									{thread.latestMessage.author.name}: {thread.latestMessage.message}
+								</div>
 					}})()}
 				</div>
 			</div>
